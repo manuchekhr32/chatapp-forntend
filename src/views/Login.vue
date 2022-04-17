@@ -25,22 +25,31 @@ export default {
 
   methods: {
     async login() {
-      try {
-        this.btnText = 'Logging in...';
-        const result = await axios.post(`http://${window.location.hostname}:9000/auth/login`, {
-          username: this.username,
-          _password: this.password
-        })
-        this.$store.dispatch('setUser', result.data)
-        alert("Authorized!");
-        this.$router.push('/')
-
+      if (this.btnText == 'Login') {
+        try {
+          this.btnText = 'Logging in...';
+          const result = await axios.post(`https://chatappexpressmn.herokuapp.com/auth/login`, {
+            username: this.username,
+            _password: this.password
+          })
+          this.$store.dispatch('setUser', result.data)
+          alert("Authorized!");
+          this.$router.push('/')
+  
+        }
+        catch(err) {
+          alert(err.response.data.message)
+        }
+        this.btnText = 'Login';
       }
-      catch(err) {
-        alert(err.response.data.message)
       }
-      this.btnText = 'Login';
-    }
   },
+
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$store.getters.isUser) return vm.$router.push({name: 'home'})
+      return true
+    })
+  }
 }
 </script>

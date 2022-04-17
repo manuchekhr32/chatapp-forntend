@@ -31,18 +31,27 @@ export default {
 
   methods: {
     async register() {
-      try {
-        this.btnText = 'Please wait...';
-        const result = await axios.post(`http://${window.location.hostname}:9000/auth/register`, this.userData)
-        this.$store.dispatch('setUser', result.data)
-        alert("Successfully registered!");
-        this.$router.push('/')
+      if (this.btnText == 'Register') {
+        try {
+          this.btnText = 'Please wait...';
+          const result = await axios.post(`https://chatappexpressmn.herokuapp.com/auth/register`, this.userData)
+          this.$store.dispatch('setUser', result.data)
+          alert("Successfully registered!");
+          this.$router.push('/')
+        }
+        catch(err) {
+          alert(err.response.data.message)
+        }
+        this.btnText = 'Register';
       }
-      catch(err) {
-        alert(err.response.data.message)
-      }
-      this.btnText = 'Register';
     }
   },
+
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$store.getters.isUser) return vm.$router.push({name: 'home'})
+      return true
+    })
+  }
 }
 </script>

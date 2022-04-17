@@ -92,7 +92,7 @@ export default {
     try {
       const result = await axios({
         method: 'get',
-        url: `http://${window.location.hostname}:9000/message/get/${this.$route.params.username}`,
+        url: `https://chatappexpressmn.herokuapp.com/message/get/${this.$route.params.username}`,
         headers: {
           authorization: localStorage.getItem('authorization')
         }
@@ -103,6 +103,7 @@ export default {
       this.scrollBottom()
     } 
     catch (e) {
+      if (!e.response.data.error) return this.$router.push({ name: 'login'})
       alert(e.response.data.error)
       this.$router.push('/')
     }
@@ -288,6 +289,13 @@ export default {
       e.preventDefault();
     })
   },
+
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$store.getters.isUser) return vm.$router.push({name: 'login'})
+      return true
+    })
+  }
 }
 </script>
 

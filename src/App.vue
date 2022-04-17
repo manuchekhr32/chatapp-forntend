@@ -8,15 +8,19 @@
 import axios from "axios";
 export default {
   async mounted() {
+    if (localStorage.getItem('authorization') == null) {
+      this.$store.dispatch('setUser', '{}')  
+    }
+    
     const user = this.$store.getters.getUser;
 
-    if (typeof user != 'object') {
+    if (!this.$store.getters.isUser) {
       localStorage.setItem('authorization', '{}')
     } 
 
-    else if (Object.keys(user).includes('username') && Object.keys(user).includes('_password')) {
+    else if (this.$store.getters.isUser) {
       try {
-        await axios.post(`http://${window.location.hostname}:9000/auth/check`, user)
+        await axios.post(`https://chatappexpressmn.herokuapp.com/auth/check`, user)
       }
       catch (e) {
         if (e.response.status == 404) {
@@ -28,8 +32,6 @@ export default {
     if (Notification.permission !== 'granted') {
       Notification.requestPermission()
     }
-
-    console.log(process.env.TEST);
-  }
+  },
 }
 </script>
