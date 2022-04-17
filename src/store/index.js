@@ -5,11 +5,22 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    user: JSON.parse(localStorage.getItem('authorization'))
   },
-  mutations: {
+  getters: {
+    getUser: (state) => {
+      return state.user
+    }
   },
   actions: {
+    setUser: ({ commit }, user) => {
+      commit('setUser', user)
+    }
   },
-  modules: {
-  }
+  mutations: {
+    setUser: (state, user) => {
+      state.user = user
+      localStorage.setItem('authorization', JSON.stringify(user))
+    }
+  },
 })
