@@ -109,7 +109,7 @@ export default {
     }
 
     // Socket
-    const ws = new WebSocket(`ws://chatappexpressmn.herokuapp.com`);
+    const ws = new WebSocket(`wss://chatappexpressmn.herokuapp.com`);
     this.ws = ws;
 
     ws.onopen = () => {
